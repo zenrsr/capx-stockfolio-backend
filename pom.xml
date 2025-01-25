@@ -42,6 +42,11 @@
 			<version>1.18.30</version> <!-- Add the latest version explicitly -->
 			<scope>provided</scope> <!-- Lombok does not compile into production -->
 		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>io.github.cdimascio</groupId>-->
+<!--			<artifactId>dotenv-java</artifactId>-->
+<!--			<version>2.3.2</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
