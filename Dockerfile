@@ -1,10 +1,23 @@
-# Build stage (using verified tags)
+# Build stage
 FROM maven:3.8.6-eclipse-temurin-17 AS build
 WORKDIR /app
-COPY . .
-RUN mvn clean package
 
-# Run stage
+# Cache dependencies separately
+COPY pom.xml .
+RUN mvn dependency:go-offline -B --fail-never
+
+# Copy source and build
+COPY src/ ./src/
+RUN mvn clean package -DskipTests
+
+# Final image
 FROM eclipse-temurin:17-jre-jammy
-COPY --from=build /app/target/capx-0.0.1-SNAPSHOT.jar /app.jar
-CMD ["java", "-jar", "/app.jar"]
+WORKDIR /app
+RUN adduser --system --group appuser && \
+    chown appuser:appuser /app
+USER appuser
+
+COPY --from=build --chown=appuser:appuser /app/target/capx-*.jar app.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]

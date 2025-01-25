@@ -1,0 +1,9 @@
+**/target/
+**/.mvn/
+**/.git/
+**/.idea/
+**/*.iml
+**/Dockerfile
+**/docker-compose.yml
+**/mvnw
+**/mvnw.cmd
