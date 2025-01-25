@@ -7,7 +7,10 @@ services:
       MYSQL_DATABASE: capx
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+      MYSQL_HOST: '%'
       TZ: UTC
+    command: 
+      - --default-authentication-plugin=caching_sha2_password
     ports:
       - "3307:3306"
     networks:
@@ -15,7 +18,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uuser", "-ppassword"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -35,6 +38,9 @@ services:
         condition: service_healthy
     networks:
       - capx-network
+    volumes:
+      - ./wait-for-it.sh:/wait-for-it.sh  
+    command: ["sh", "/wait-for-it.sh", "db:3306", "--", "java", "-jar", "app.jar"]
 
 networks:
   capx-network:
